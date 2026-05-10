@@ -1,0 +1,17 @@
+# system
+.DS_Store
+.idea/
+.vscode/
+
+# PrestaShop runtime
+/var/
+/vendor/
+/cache/
+/log/
+/logs/
+
+# env
+.env
+
+# docker volumes (jeśli kiedyś się pojawią lokalnie)
+*.log
