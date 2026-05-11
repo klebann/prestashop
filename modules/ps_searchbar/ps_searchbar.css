@@ -1,25 +1,25 @@
 #search_widget {
   margin-bottom: .625rem;
-  overflow: auto;
+  width: 100%;
 }
 #search_widget form {
   position: relative;
+  border: 1px solid black;
 }
-#search_widget form i {
+#search_widget form a {
   position: absolute;
   padding: .5rem;
 }
-#search_widget form i.clear {
+#search_widget form a {
   right: 15px;
-  display: none;
 }
 #search_widget form input {
   width: 100%;
-  padding: 10px 20px 10px 40px;
+  padding: 10px 20px 10px 20px;
   outline: none;
-  background-color: #f1f1f1;
   border: none;
   border-radius: 5px;
+  background: none;
 }
 
 .ui-autocomplete.searchbar-autocomplete {
@@ -51,8 +51,8 @@
 
 @media only screen and (min-width: 768px) {
   #search_widget {
-    float: right;
     margin-bottom: 0;
+    max-width: none;
   }
 
   .ui-autocomplete.searchbar-autocomplete {
@@ -64,6 +64,14 @@
 
 @media only screen and (min-width: 992px) {
   #search_widget {
-    min-width: 16.5rem;
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media only screen and (min-width: 576px) {
+  #search_widget {
+    width: 100%;
+    max-width: none;
   }
 }

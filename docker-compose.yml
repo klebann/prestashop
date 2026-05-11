@@ -12,6 +12,7 @@ services:
       DB_PASSWD: prestashop
       PS_DOMAIN: localhost:8080
       PS_INSTALL_AUTO: 1
+      PS_DEV_MODE: 1
     volumes:
       - ./modules:/var/www/html/modules
       - ./themes:/var/www/html/themes
