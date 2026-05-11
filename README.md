@@ -10,9 +10,11 @@ The project consists of two main parts:
 - Built on top of the `classic` PrestaShop theme
 - Focus on layout structure, positioning, and approximate styling rather than pixel-perfect reproduction
 
+![header.png](header.png)
+
 ### 2. Shipping module
 
-- Custom module `lowestShippingPrice`
+- Custom module `minshipping`
 - Displays the lowest available shipping cost on the product page
 - Takes into account PrestaShop shipping configuration (carriers, zones, weight/price ranges, etc.)
 - Implementation in progress
