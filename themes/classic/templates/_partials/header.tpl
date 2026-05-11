@@ -73,19 +73,19 @@
                 <div class="col-md-3 hidden-sm-down">
                     <div class="header-actions">
 
-                        <a href="#" class="header-action">
+                        <a href="{$link->getModuleLink('blockwishlist', 'lists')}" class="header-action">
                             <i class="material-icons">favorite_border</i>
                             <span>Ulubione</span>
                         </a>
 
-                        <a href="#" class="header-action">
+                        <a href="{$urls.pages.my_account}" class="header-action">
                             <i class="material-icons">person</i>
                             <span>Panel</span>
                         </a>
 
-                        <a href="#" class="header-action">
+                        <a href="{$link->getPageLink('cart', true, null, ['action' => 'show'])}" class="header-action">
                             <i class="material-icons">shopping_bag</i>
-                            <span>Koszyk</span>
+                            <span>Koszyk {$cart.products_count|default:0}</span>
                         </a>
 
                     </div>
