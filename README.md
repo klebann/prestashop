@@ -1,4 +1,4 @@
-# Prestashop Project
+# PrestaShop Project
 
 ## 📌 Scope
 
@@ -15,13 +15,18 @@ The project consists of two main parts:
 ### 2. Shipping module
 
 - Custom module `minshipping`
-- Displays the lowest available shipping cost on the product page
-- Takes into account PrestaShop shipping configuration (carriers, zones, weight/price ranges, etc.)
-- Implementation in progress
+- Displays the lowest available **paid** shipping cost on the product page
+- Uses hook: `displayProductAdditionalInfo`
+- Takes into account PrestaShop shipping configuration (active carriers, zones, weight limits, and customer delivery address)
+- Excludes free shipping methods (for example in-store pickup with `0.00` shipping cost)
+- Shows a fallback message when no paid shipping method is available
+- Uses escaped output in Smarty templates
+
+![minshipping](minshipping.png)
 
 ---
-
 ## 🚀 Run
 
 ```bash
 docker-compose up -d
+```
