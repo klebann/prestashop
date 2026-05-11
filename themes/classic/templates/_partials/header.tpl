@@ -70,7 +70,7 @@
                     {hook h='displaySearch'}
                 </div>
 
-                <div class="col-md-3 hidden-sm-down">
+                <div class="col-md-3 hidden-md-down">
                     <div class="header-actions">
 
                         <a href="{$link->getModuleLink('blockwishlist', 'lists')}" class="header-action">

@@ -132,3 +132,19 @@
         border-top: 1px solid #000;
     }
 }
+
+@media (max-width: 767px) {
+    #header .header-nav {
+        padding: 0;
+    }
+
+    #header .header-nav .mobile {
+        display: flex;
+        align-items: center;
+    }
+
+    #header .header-top > .container > .row:first-of-type > [class*='col-'] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
