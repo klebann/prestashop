@@ -4,6 +4,12 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+/**
+ * Displays the minimum shipping cost on the product page.
+ *
+ * @author  Jakub Kleban
+ * @version 1.0.0
+ */
 class MinShipping extends Module
 {
     public function __construct()
@@ -31,6 +37,14 @@ class MinShipping extends Module
         return parent::uninstall();
     }
 
+    /**
+     * Returns the cheapest available carrier for the given product.
+     *
+     * @param int $idProduct
+     * @param int $idProductAttribute
+     *
+     * @return array{price: float|null, carrier: array|null}|array{error: string}
+     */
     private function getMinimalShippingCost($idProduct, $idProductAttribute = 0)
     {
         $context = $this->context;
@@ -109,6 +123,13 @@ class MinShipping extends Module
         ];
     }
 
+    /**
+     * Renders the minimum shipping cost block on the product page.
+     *
+     * @param array $params
+     *
+     * @return string
+     */
     public function hookDisplayProductAdditionalInfo($params)
     {
         $product = $params['product'] ?? null;
