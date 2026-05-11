@@ -51,7 +51,7 @@ class MinShipping extends Module
 
         $idCustomer = (int)$context->customer->id;
         if (!$idCustomer) {
-            return ['error' => 'Musisz być zalogowany lub mieć adres dostawy.'];
+            return ['error' => $this->l('Musisz być zalogowany lub mieć adres dostawy.')];
         }
 
         $idAddress = (int)$context->cart->id_address_delivery;
@@ -60,7 +60,7 @@ class MinShipping extends Module
         }
 
         if (!$idAddress) {
-            return ['error' => 'Brak adresu dostawy w koncie klienta.'];
+            return ['error' => $this->l('Brak adresu dostawy w koncie klienta.')];
         }
 
         $cart = new Cart();
@@ -70,8 +70,15 @@ class MinShipping extends Module
         $cart->id_address_delivery = $idAddress;
         $cart->id_address_invoice = $idAddress;
 
-        $cart->add();
-        $cart->updateQty(1, (int)$idProduct, (int)$idProductAttribute);
+        if (!$cart->add()) {
+            return ['error' => $this->l('Nie udało się przygotować koszyka do kalkulacji dostawy.')];
+        }
+
+        $updateResult = $cart->updateQty(1, (int)$idProduct, (int)$idProductAttribute);
+        if (!$updateResult || (int)$updateResult < 0) {
+            $cart->delete();
+            return ['error' => $this->l('Nie udało się dodać produktu do kalkulacji dostawy.')];
+        }
 
         $product = new Product((int)$idProduct);
         $weight = (float)$product->weight;
@@ -88,33 +95,39 @@ class MinShipping extends Module
             Carrier::ALL_CARRIERS
         );
 
-        foreach ($carriers as $data) {
-            try {
-                $carrier = new Carrier($data['id_carrier']);
+        try {
+            foreach ($carriers as $data) {
+                try {
+                    $carrier = new Carrier($data['id_carrier']);
 
-                if ($carrier->max_weight > 0 && $weight > $carrier->max_weight) {
+                    if ($carrier->max_weight > 0 && $weight > $carrier->max_weight) {
+                        continue;
+                    }
+
+                    $price = $cart->getPackageShippingCost((int)$carrier->id);
+
+                    // Pomijamy darmowe metody (np. odbiór osobisty), pokazujemy tylko płatną dostawę.
+                    if ($price === false || $price === null || (float)$price <= 0) {
+                        continue;
+                    }
+
+                    if ($minPrice === null || (float)$price < $minPrice) {
+                        $minPrice = (float)$price;
+                        $bestCarrier = [
+                            'id' => $carrier->id,
+                            'name' => $carrier->name,
+                            'price' => (float)$price,
+                            'weight' => $weight
+                        ];
+                    }
+
+                } catch (Exception $e) {
                     continue;
                 }
-
-                $price = $cart->getPackageShippingCost((int)$carrier->id);
-
-                if ($price <= 0) {
-                    continue;
-                }
-
-                if ($minPrice === null || $price < $minPrice) {
-                    $minPrice = $price;
-                    $bestCarrier = [
-                        'id' => $carrier->id,
-                        'name' => $carrier->name,
-                        'price' => $price,
-                        'weight' => $weight
-                    ];
-                }
-
-            } catch (Exception $e) {
-                continue;
             }
+        } finally {
+            // Tymczasowy koszyk służy tylko do kalkulacji i nie powinien zostawać w bazie.
+            $cart->delete();
         }
 
         return [
@@ -149,7 +162,7 @@ class MinShipping extends Module
             return $this->display(__FILE__, 'views/templates/hook/minshipping_error.tpl');
         }
 
-        if (!$result['price']) {
+        if ($result['price'] === null) {
             $this->context->smarty->assign([
                 'no_shipping' => true
             ]);
